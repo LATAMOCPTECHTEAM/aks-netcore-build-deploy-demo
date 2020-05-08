@@ -1,0 +1,37 @@
+﻿kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: helloaks
+  labels:
+    app: helloaks
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: helloaks
+  template:
+    metadata:
+      labels:
+        app: helloaks
+    spec:
+      containers:
+      - name: helloaks
+        image: helloaks
+        ports:
+        - containerPort: 80
+          protocol: TCP
+      imagePullSecrets:
+      - name: regcred
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: helloaks
+spec:
+  selector:
+    app: helloaks
+  type: LoadBalancer
+  ports:
+  - name: helloaks-port
+    port: 80
+    targetPort: 80
